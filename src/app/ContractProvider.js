@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, createContext, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { injected, loadContract } from "../utils/connectors";
+import { injected } from "../utils/connectors";
+import { loadContract } from "../utils/contractFunctions";
 
 export const SContractContext = createContext();
 

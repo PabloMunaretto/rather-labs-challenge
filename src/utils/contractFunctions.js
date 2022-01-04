@@ -14,9 +14,10 @@ export const loadContract = async (library) => {
 };
 
 export const submitQuiz = async(library, surveyContract, surveyId, answers, account) => {
-
-	console.log('AQUIIII', surveyId, answers);
-	await surveyContract.methods.submit(surveyId, answers)
+	const answersArray = Object.values(answers).map(obj => obj.id);
+	
+	console.log('AQUIIII', surveyId, answers, answersArray);
+	await surveyContract.methods.submit(surveyId, answersArray)
 		.send({ from: account })
 		.on('transactionHash', (hash) => {
 			return hash;

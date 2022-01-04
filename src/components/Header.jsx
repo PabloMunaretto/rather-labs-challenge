@@ -5,7 +5,7 @@ import { SContractContext } from '../app/ContractProvider';
 import { configureNetwork, formatAccount } from '../utils/utils';
 
 import { Button, AppBar, Typography } from '@material-ui/core';
-import { useStyles } from '../app/App';
+import { useStyles } from '../theme/theme';
 
 
 const Header = () => {

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Typography, Button } from '@material-ui/core';
-import { useStyles } from '../app/App';
+import { useStyles } from '../theme/theme';
 import { useState } from 'react';
 import { submitQuiz } from '../utils/contractFunctions';
 import { useWeb3React } from '@web3-react/core';
@@ -14,17 +14,15 @@ const Survey = ({ Quiz }) => {
 	const [surveyBegin, setSurveyBegin] = useState(false);
 	const [surveyEnd, setSurveyEnd] = useState(false);
 	const [question, setQuestion] = useState(null);
-	const [answers, setAnswers] = useState({ preg1:'0', preg2:'1', preg3:'3'});
+	const [answers, setAnswers] = useState({});
 	const [options, setOptions] = useState(true);
 	const [init, setInit] = useState(0);
-	console.log('Quiz', Quiz.questions);
 
 	let initt = 0;
 	// Iniciar Quiz
 	const startSurvey = () => {
 		let lifeTimeSeconds;
 		const length = Quiz.questions.length; 
-		console.log(length);
 		setSurveyBegin(true);
 
 		setQuestion(Quiz.questions[initt]);
@@ -32,7 +30,6 @@ const Survey = ({ Quiz }) => {
 		const myInterval = setInterval(() => {
 			// eslint-disable-next-line
 			intervalos();
-			// console.log('EJECUTADO');
 		}, lifeTimeSeconds);
 
 		const intervalos = () => {
@@ -54,15 +51,20 @@ const Survey = ({ Quiz }) => {
 		let surveyId;
 		submitQuiz(library, surveyContract, surveyId = '0', answers, account)
 			.then(result => console.log('result', result))
-			.catch(e => console.log('error', e));
+			.catch(e => {
+				if (e.code === 4001) {
+					window.alert('denied transaction');
+				}
+				console.log('error', e);
+			});
 	};
-    
+
 	return (
 		<div className={`${spacing} ${column}`}>
 			<Typography className={textPrimary} variant="h3">{ Quiz.title }</Typography>
 
 			{
-				!surveyEnd ?
+				surveyEnd ?
 					<div className={column} style={{ width: '100%'}}>
 						<div className={`${enRows}`} style={{ margin: '16px' }}>
 							{
@@ -73,7 +75,7 @@ const Survey = ({ Quiz }) => {
 												<Typography className={`${textPrimary}`} variant="h5">{ answer[0] }</Typography>
 											</div>
 											<div className={`${spacing}`}>
-												<Typography className={`${textPrimary}`} variant="h6">{ answer[1] }</Typography>
+												<Typography className={`${textPrimary}`} variant="h6">{ answer[1].response }</Typography>
 											</div>
 										</div>
 									);
@@ -99,10 +101,13 @@ const Survey = ({ Quiz }) => {
                             question.options.map((options, i) => (
                             	<Button 
                             		onClick={() => {
-                            			if (answers.length === init) {
+                            			if (Object.keys(answers).length === init) {
                             				setOptions(false);
                             			}
-                            			setAnswers({ ...answers, [question.text]: `${i}` });
+                            			setAnswers({ ...answers, [question.text]: {
+                            				response: options.text,
+                            				id: `${i}`,
+                            			} });
                             		}}
                             		key={i} className={`${spacing} ${networkButton} ${radius}`}>
                             		<Typography variant="h6">{options.text}</Typography>
@@ -118,7 +123,7 @@ const Survey = ({ Quiz }) => {
 							<Button className={`${spacing} ${networkButton} ${radius}`}
 								onClick={() => startSurvey()}
 							>
-								<Typography variant="h6">Comenzar Quiz</Typography>
+								<Typography className={`${textPrimary}`} variant="h6">Comenzar Quiz</Typography>
 							</Button>
 						</div>
 			}

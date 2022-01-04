@@ -1,5 +1,5 @@
 import SurveyContract from '../abis/survey.json';
-import { SURVEY_ADDRESS } from './utils';
+import { SURVEY_ADDRESS, formatBalance } from './utils';
 
 export const loadContract = async (library) => {
 	const web3React = await library;
@@ -13,10 +13,21 @@ export const loadContract = async (library) => {
 	}
 };
 
+export const balanceOf = async(account, surveyContract) => {
+	const balance = await surveyContract.methods.balanceOf(account).call().then(balance => {
+		return formatBalance(balance);
+	}); 
+	return balance;
+};
+export const tokenName = async(surveyContract) => {
+	const name = await surveyContract.methods.name().call().then(name => name);
+	return name;
+};
+
 export const submitQuiz = async(library, surveyContract, surveyId, answers, account) => {
 	const answersArray = Object.values(answers).map(obj => obj.id);
 	
-	console.log('AQUIIII', surveyId, answers, answersArray);
+	// console.log('AQUI ES', surveyContract, surveyId, answersArray, account);
 	await surveyContract.methods.submit(surveyId, answersArray)
 		.send({ from: account })
 		.on('transactionHash', (hash) => {

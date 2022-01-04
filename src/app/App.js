@@ -12,7 +12,8 @@ import { Container, Box } from '@material-ui/core';
 import { useStyles } from '../theme/theme';
 
 const App = () => {
-	const { surveyBox, surveyContainer, radius, columnFullH } = useStyles();
+	const { surveyBox, radius, columnFullH } = useStyles();
+	const [balance, setBalance] = React.useState(null);
 
 	return (
 		<React.Fragment >
@@ -21,10 +22,10 @@ const App = () => {
 				<Web3ReactProvider getLibrary={getLibrary}>
 					<ContractProvider>
           
-						<Header />
-						<div className={surveyContainer}>
+						<Header balance={balance} setBalance={setBalance} />
+						<div >
 							<Box className={`${radius} ${surveyBox}`} >
-								<Survey Quiz={Quiz} />
+								<Survey Quiz={Quiz} setBalance={setBalance} />
 							</Box>
 						</div>
 

@@ -1,12 +1,26 @@
+import Web3 from 'web3/dist/web3.min';
+const web3 = new Web3();
+
 export const SURVEY_ADDRESS = '0x74F0B668Ea3053052DEAa5Eedd1815f579f0Ee03';
 
+export const generateRandomId = () => {
+	// random id's de 5 digitos para el survey ID mientras no haya un id dentro del json.
+	const fiveDigit = Math.floor(Math.random() * 10 ** 5); 
+	return fiveDigit.toString();
+};
+  
 export const formatAccount = (account) => {
 	const A = account.slice(0, 4);
 	const B = account.slice(account.length-4);
 	const formatedAccount = `${A}...${B}`;
 	return formatedAccount;
 };
-
+export const formatBalance = (balance) => {
+	const precision = 100;
+	balance = web3.utils.fromWei(balance.toString(), 'ether');
+	balance = Math.round(balance * precision) / precision; // redondeado a dos decimales
+	return balance;
+};
 export const configureNetwork = async(web3) => {
 	if (web3) {
 		try {

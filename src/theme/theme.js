@@ -15,7 +15,7 @@ export const theme = createTheme({
 		fontFamily: [
 			'Fugaz One', 'cursive'
 		].join(','),
-		fontSize: 18,
+		// fontSize: 18,
 		fontWeightLight: 300,
 		fontWeightRegular: 400,
 		fontWeightMedium: 500
@@ -23,19 +23,18 @@ export const theme = createTheme({
 });
 
 export const useStyles = makeStyles((theme) => ({
-	surveyContainer: {
-		height: '100%',
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
 	width: { width: '100%' },
 	surveyBox: {
+		position: 'relative',
+		marginTop: theme.spacing(6),
 		backgroundColor: theme.palette.primary.dark,
-		width: '80%',
+		width: '100%',
 		display: 'flex',
 		flexDirection: 'column',
-		boxShadow: '10px 10px 20px gray'
+		boxShadow: '10px 10px 20px gray',
+		[theme.breakpoints.down('sm')]: {
+			width: '350px',
+		},
 	},
 	spacing: {
 		paddingRight: theme.spacing(2), 
@@ -62,7 +61,11 @@ export const useStyles = makeStyles((theme) => ({
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 		alignItems: 'center',
-		width: '100%'
+		width: '100%',
+		[theme.breakpoints.down('sm')]: {
+			flexWrap: 'wrap',
+			padding: theme.spacing(2),
+		}
 	},
 	column: {
 		position: 'relative',
@@ -74,15 +77,11 @@ export const useStyles = makeStyles((theme) => ({
 	columnFullH: {
 		display: 'flex',
 		flexFlow: 'column',
+		alignItems: 'center',
 		height: '100vh',
 	},
-	quiz: {
-		transition: theme.transitions.create(['background-color', 'transform'], {
-			duration: theme.transitions.duration.standard,
-		})
-	},
 	quizOptions: {
-		width: '100%',
+		width: '80%',
 		display: 'flex',
 		justifyContent: 'space-around'
 	},
@@ -94,8 +93,29 @@ export const useStyles = makeStyles((theme) => ({
 	},
 	imgContainer: {
 		maxWidth: '600px',
+		[theme.breakpoints.down('sm')]: {
+			maxWidth: '350px',
+		},
 	},
-	textPrimary: { color: 'dark' },
+	img: { 
+		maxWidth: '600px',
+		margin: theme.spacing(1),
+		[theme.breakpoints.down('sm')]: {
+			maxWidth: '320px',
+		}
+ 	},
+	textPrimary: { 
+		color: 'dark',
+		[theme.breakpoints.up('lg')]: {
+			fontSize: 36,
+		},
+		[theme.breakpoints.down('lg')]: {
+			fontSize: 24,
+		},
+		[theme.breakpoints.down('sm')]: {
+			fontSize: 14,
+		},
+	},
 	textSecondary: { color: theme.palette.secondary.main },
 	border: { border: `1px solid ${theme.palette.primary.dark}` },
 	darkerBox: {

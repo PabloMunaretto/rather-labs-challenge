@@ -2,12 +2,13 @@ import React, { useContext } from 'react';
 import { Typography, Button } from '@material-ui/core';
 import { useStyles } from '../theme/theme';
 import { useState } from 'react';
-import { submitQuiz } from '../utils/contractFunctions';
+import { submitQuiz, balanceOf } from '../utils/contractFunctions';
 import { useWeb3React } from '@web3-react/core';
 import { SContractContext } from '../app/ContractProvider';
+import { generateRandomId } from '../utils/utils';
 
-const Survey = ({ Quiz }) => {
-	const { column, width, spacing, networkButton, radius, quiz, quizOptions, imgContainer, enRows, ownShadow, darkerBox, textPrimary } = useStyles();
+const Survey = ({ Quiz, setBalance }) => {
+	const { column, img, spacing, networkButton, radius, quizOptions, imgContainer, enRows, ownShadow, darkerBox, textPrimary } = useStyles();
 	const { library, account } = useWeb3React();
 	const { surveyContract } = useContext(SContractContext);
 
@@ -46,11 +47,15 @@ const Survey = ({ Quiz }) => {
 		};
 	};
 
-    
 	const submitQ = () => {
-		let surveyId;
-		submitQuiz(library, surveyContract, surveyId = '0', answers, account)
-			.then(result => console.log('result', result))
+		let surveyId = generateRandomId();
+		// eslint-disable-next-line
+		submitQuiz(library, surveyContract, surveyId, answers, account)
+			.then(result => {
+				balanceOf(account, surveyContract).then(bal => setBalance(bal));
+				setSurveyEnd(false);
+				console.log('result', result);
+			})
 			.catch(e => {
 				if (e.code === 4001) {
 					window.alert('denied transaction');
@@ -60,7 +65,7 @@ const Survey = ({ Quiz }) => {
 	};
 
 	return (
-		<div className={`${spacing} ${column}`}>
+		<div className={`${spacing} ${column}`} >
 			<Typography className={textPrimary} variant="h3">{ Quiz.title }</Typography>
 
 			{
@@ -70,7 +75,7 @@ const Survey = ({ Quiz }) => {
 							{
 								Object.entries(answers).map((answer, i) => {
 									return (
-										<div key={i} className={`${radius} ${column} ${darkerBox} ${ownShadow}`}>
+										<div key={i} className={`${radius} ${column} ${darkerBox} ${ownShadow} ${spacing}`}>
 											<div className={`${spacing}`}>
 												<Typography className={`${textPrimary}`} variant="h5">{ answer[0] }</Typography>
 											</div>
@@ -90,10 +95,12 @@ const Survey = ({ Quiz }) => {
 					</div>
 					:
 					surveyBegin && question ?
-						<div className={`${column} ${quiz} ${width}`}>
+						<div className={`${column}`} >
 
 							<Typography className={`${textPrimary} ${spacing}`} variant="h4">{question.text}</Typography>
-							<img src={question.image} alt="" className={`${radius} ${imgContainer}`} />
+							<div className={`${imgContainer}`}>
+								<img src={question.image} alt="" className={`${radius} ${img}`} />
+							</div>
 
 							<div className={`${quizOptions} ${spacing}`}>
 								{
@@ -110,7 +117,7 @@ const Survey = ({ Quiz }) => {
                             			} });
                             		}}
                             		key={i} className={`${spacing} ${networkButton} ${radius}`}>
-                            		<Typography variant="h6">{options.text}</Typography>
+                            		<Typography className={textPrimary} variant="h6">{options.text}</Typography>
                             	</Button>
                             ))
 								}

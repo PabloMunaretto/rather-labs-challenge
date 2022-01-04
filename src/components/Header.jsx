@@ -6,20 +6,17 @@ import { configureNetwork, formatAccount } from '../utils/utils';
 
 import { Button, AppBar, Typography } from '@material-ui/core';
 import { useStyles } from '../theme/theme';
+import { balanceOf, tokenName } from '../utils/contractFunctions';
 
-
-const Header = () => {
+const Header = ({ balance, setBalance }) => {
 	const { spacing, outerSpacing, headerFlex, networkButton, radius, textPrimary, column } = useStyles();
-	const [balance, setBalance] = useState(null);
+	const [name, setName] = useState(null);
 	const { surveyContract } = useContext(SContractContext);
 	const { account, library, chainId } = useWeb3React();
     
 	if (surveyContract) {
-		const balanceOf = async(account) => {
-			const balance = await surveyContract.methods.balanceOf(account).call(); 
-			setBalance(balance);
-		};
-		balanceOf(account);
+		balanceOf(account, surveyContract).then(bal => setBalance(bal));
+		tokenName(surveyContract).then(name => setName(name));
 	}
     
 	return (
@@ -27,12 +24,12 @@ const Header = () => {
 
 			{
 				account && chainId === 3 &&
-					<AppBar position="static" className={`${outerSpacing} ${radius}`} >
+					<AppBar position="static" className={`${outerSpacing} ${radius}`}>
 						<div className={`${spacing} ${headerFlex}`}>
 							<Button>
 								<Typography variant="h5" className={`${textPrimary}`}>{ formatAccount(account) }</Typography>
 							</Button>
-							<Typography variant="h5" className={`${headerFlex}`}>Quiz balance: { balance }</Typography>
+							<Typography variant="h5" className={`${textPrimary} ${headerFlex}`}>Balance: { balance } { name }</Typography>
 						</div>
 					</AppBar>
 			}

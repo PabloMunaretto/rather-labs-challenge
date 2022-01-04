@@ -20,7 +20,7 @@ export const useStyles = makeStyles((theme) => ({
 	},
 	width: { width: '100%' },
 	surveyBox: {
-		backgroundColor: theme.palette.primary.main,
+		backgroundColor: theme.palette.primary.dark,
 		width: '80%',
 		display: 'flex',
 		flexDirection: 'column',
@@ -45,6 +45,13 @@ export const useStyles = makeStyles((theme) => ({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center'
+	},
+	enRows: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		alignItems: 'center',
+		width: '100%'
 	},
 	column: {
 		position: 'relative',
@@ -71,19 +78,28 @@ export const useStyles = makeStyles((theme) => ({
 	networkButton: {
 		display: 'flex',
 		alignSelf: 'center',
-		border: '1px solid black',
+		boxShadow: '5px 5px 10px gray',
 		width: '50%',
 	},
 	imgContainer: {
 		maxWidth: '600px',
 	},
-	textPrimary: { color: theme.palette.primary.main },
+	textPrimary: { color: 'dark' },
 	textSecondary: { color: theme.palette.secondary.main },
-	textWhite: { color: 'white' },
-  
+	border: { border: `1px solid ${theme.palette.primary.dark}` },
+	darkerBox: {
+		backgroundColor: theme.palette.primary.main,
+	},
+	ownShadow: { 
+		boxShadow: '5px 5px 10px gray',
+	},
 }));
 const App = () => {
 	const { surveyBox, surveyContainer, radius, columnFullH } = useStyles();
+
+	fetch('https://ratherlabs-challenges.s3.sa-east-1.amazonaws.com/survey-sample.json')
+		.then(response => response.json())
+		.then(data => console.log('AQUI REY', data));
 
 	return (
 		<React.Fragment >

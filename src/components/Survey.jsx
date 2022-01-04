@@ -7,14 +7,14 @@ import { useWeb3React } from '@web3-react/core';
 import { SContractContext } from '../app/ContractProvider';
 
 const Survey = ({ Quiz }) => {
-	const { column, width, spacing, networkButton, radius, quiz, quizOptions, imgContainer } = useStyles();
+	const { column, width, spacing, networkButton, radius, quiz, quizOptions, imgContainer, enRows, ownShadow, darkerBox, textPrimary } = useStyles();
 	const { library, account } = useWeb3React();
 	const { surveyContract } = useContext(SContractContext);
 
 	const [surveyBegin, setSurveyBegin] = useState(false);
 	const [surveyEnd, setSurveyEnd] = useState(false);
 	const [question, setQuestion] = useState(null);
-	const [answers, setAnswers] = useState([]);
+	const [answers, setAnswers] = useState({ preg1:'0', preg2:'1', preg3:'3'});
 	const [options, setOptions] = useState(true);
 	const [init, setInit] = useState(0);
 	console.log('Quiz', Quiz.questions);
@@ -32,7 +32,7 @@ const Survey = ({ Quiz }) => {
 		const myInterval = setInterval(() => {
 			// eslint-disable-next-line
 			intervalos();
-			console.log('EJECUTADO');
+			// console.log('EJECUTADO');
 		}, lifeTimeSeconds);
 
 		const intervalos = () => {
@@ -56,24 +56,41 @@ const Survey = ({ Quiz }) => {
 			.then(result => console.log('result', result))
 			.catch(e => console.log('error', e));
 	};
-	console.log(answers, account);
     
 	return (
 		<div className={`${spacing} ${column}`}>
-			<Typography variant="h3">{ Quiz.title }</Typography>
+			<Typography className={textPrimary} variant="h3">{ Quiz.title }</Typography>
 
 			{
-				surveyEnd ?
-					<Button 
-						onClick={() => submitQ()}
-						className={`${spacing} ${networkButton} ${radius}`}>
-						<Typography variant="h6">Submit Quiz</Typography>
-					</Button>
+				!surveyEnd ?
+					<div className={column} style={{ width: '100%'}}>
+						<div className={`${enRows}`} style={{ margin: '16px' }}>
+							{
+								Object.entries(answers).map((answer, i) => {
+									return (
+										<div key={i} className={`${radius} ${column} ${darkerBox} ${ownShadow}`}>
+											<div className={`${spacing}`}>
+												<Typography className={`${textPrimary}`} variant="h5">{ answer[0] }</Typography>
+											</div>
+											<div className={`${spacing}`}>
+												<Typography className={`${textPrimary}`} variant="h6">{ answer[1] }</Typography>
+											</div>
+										</div>
+									);
+								})
+							}
+						</div>
+						<Button 
+							onClick={() => submitQ()}
+							className={`${darkerBox} ${spacing} ${networkButton} ${radius} `}>
+							<Typography className={`${textPrimary}`} variant="h6">Submit Quiz</Typography>
+						</Button>
+					</div>
 					:
 					surveyBegin && question ?
 						<div className={`${column} ${quiz} ${width}`}>
 
-							<Typography variant="h4" className={spacing}>{question.text}</Typography>
+							<Typography className={`${textPrimary} ${spacing}`} variant="h4">{question.text}</Typography>
 							<img src={question.image} alt="" className={`${radius} ${imgContainer}`} />
 
 							<div className={`${quizOptions} ${spacing}`}>
@@ -82,11 +99,10 @@ const Survey = ({ Quiz }) => {
                             question.options.map((options, i) => (
                             	<Button 
                             		onClick={() => {
-                            			// console.log(options, i)
                             			if (answers.length === init) {
                             				setOptions(false);
                             			}
-                            			setAnswers([ ...answers, `${i}` ]);
+                            			setAnswers({ ...answers, [question.text]: `${i}` });
                             		}}
                             		key={i} className={`${spacing} ${networkButton} ${radius}`}>
                             		<Typography variant="h6">{options.text}</Typography>

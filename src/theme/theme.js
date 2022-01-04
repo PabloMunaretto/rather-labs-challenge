@@ -4,22 +4,18 @@ export const theme = createTheme({
 	palette: {
 		primary: {
 			main: '#cfe8fc',
-			light: '#a3ff00',
+			dark: '#B5DCE8',
 		},
 		secondary: {
-			main: '#1d9c00',
+			main: '#FAFCFD',
 			light: '#40bf00',
 		},
 	},
 	typography: {
 		fontFamily: [
-			'Nunito',
-			'Roboto',
-			'"Helvetica Neue"',
-			'Arial',
-			'sans-serif'
+			'Fugaz One', 'cursive'
 		].join(','),
-		fontSize: 14,
+		fontSize: 18,
 		fontWeightLight: 300,
 		fontWeightRegular: 400,
 		fontWeightMedium: 500

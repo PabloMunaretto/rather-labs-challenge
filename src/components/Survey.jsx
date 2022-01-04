@@ -30,6 +30,7 @@ const Survey = ({ Quiz }) => {
 		setQuestion(Quiz.questions[initt]);
 		lifeTimeSeconds = Quiz.questions[initt].lifetimeSeconds * 1000;
 		const myInterval = setInterval(() => {
+			// eslint-disable-next-line
 			intervalos();
 			console.log('EJECUTADO');
 		}, lifeTimeSeconds);
@@ -97,7 +98,7 @@ const Survey = ({ Quiz }) => {
 						</div>
 						:
 						<div className={column}>
-							<img src={Quiz.image} />
+							<img src={Quiz.image} alt=""/>
 							<Button className={`${spacing} ${networkButton} ${radius}`}
 								onClick={() => startSurvey()}
 							>

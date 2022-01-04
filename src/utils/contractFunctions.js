@@ -27,7 +27,7 @@ export const tokenName = async(surveyContract) => {
 export const submitQuiz = async(library, surveyContract, surveyId, answers, account) => {
 	const answersArray = Object.values(answers).map(obj => obj.id);
 	
-	// console.log('AQUI ES', surveyContract, surveyId, answersArray, account);
+	console.log('AQUI ES', surveyId, answersArray);
 	await surveyContract.methods.submit(surveyId, answersArray)
 		.send({ from: account })
 		.on('transactionHash', (hash) => {

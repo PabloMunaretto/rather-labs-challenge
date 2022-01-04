@@ -61,6 +61,7 @@ const Survey = ({ Quiz, setBalance }) => {
 					window.alert('denied transaction');
 				}
 				console.log('error', e);
+				location.reload();
 			});
 	};
 
@@ -105,8 +106,8 @@ const Survey = ({ Quiz, setBalance }) => {
 							<div className={`${quizOptions} ${spacing}`}>
 								{
 									options &&
-                            question.options.map((options, i) => (
-                            	<Button 
+                            question.options.map((options, i) => {
+                            	return <Button 
                             		onClick={() => {
                             			if (Object.keys(answers).length === init) {
                             				setOptions(false);
@@ -118,8 +119,8 @@ const Survey = ({ Quiz, setBalance }) => {
                             		}}
                             		key={i} className={`${spacing} ${networkButton} ${radius}`}>
                             		<Typography className={textPrimary} variant="h6">{options.text}</Typography>
-                            	</Button>
-                            ))
+                            	</Button>;
+                            })
 								}
 							</div>
 
